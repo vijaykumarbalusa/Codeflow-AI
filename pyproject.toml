@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "codeflow-ai"
+version = "0.1.0"
+description = "AI-powered Pull Request review automation"
+authors = ["Vijay Kumar Balusa <vijaykumarbalusa8@gmail.com>"]
+readme = "README.md"
+packages = [{include = "codeflow", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
+uvicorn = {extras = ["standard"], version = "^0.27.0"}
+pydantic = "^2.5.0"
+pydantic-settings = "^2.1.0"
+python-dotenv = "^1.0.0"
+httpx = "^0.26.0"
+PyGithub = "^2.1.1"
+groq = "^0.4.1"
+langchain-core = "^0.1.10"
+langgraph = "^0.0.20"
+qdrant-client = "^1.7.0"
+neo4j = "^5.16.0"
+sentence-transformers = "^2.3.0"
+cryptography = "^41.0.7"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.23.0"
+pytest-cov = "^4.1.0"
+black = "^24.0.0"
+ruff = "^0.1.0"
+mypy = "^1.8.0"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=src/codeflow --cov-report=html --cov-report=term"
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]
