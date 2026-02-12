@@ -9,19 +9,29 @@ from fastapi.responses import JSONResponse
 
 from .core.config import get_settings
 from .core.logging import setup_logging
+from .core.webhook_handler import WebhookHandler
 
 logger = logging.getLogger(__name__)
+
+# Global webhook handler (initialized at startup)
+webhook_handler: WebhookHandler | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan manager - runs on startup and shutdown."""
+    global webhook_handler
+
     settings = get_settings()
 
     # Startup
     setup_logging()
     logger.info(f"🚀 Starting CodeFlow AI (Environment: {settings.environment})")
     logger.info(f"Debug mode: {settings.debug}")
+
+    # Initialize webhook handler
+    webhook_handler = WebhookHandler()
+    logger.info("✅ Webhook handler ready")
 
     yield
 
@@ -57,6 +67,7 @@ async def health_check() -> dict[str, str]:
         "status": "healthy",
         "environment": settings.environment,
         "debug": str(settings.debug),
+        "ai_agent": "ready" if webhook_handler else "not initialized",
     }
 
 
@@ -67,6 +78,12 @@ async def github_webhook(request: Request) -> JSONResponse:
 
     This is where GitHub will send PR events (opened, synchronized, etc.)
     """
+    if not webhook_handler:
+        return JSONResponse(
+            content={"error": "Webhook handler not initialized"},
+            status_code=500,
+        )
+
     # Get the event type from headers
     event_type = request.headers.get("X-GitHub-Event", "unknown")
 
@@ -74,15 +91,25 @@ async def github_webhook(request: Request) -> JSONResponse:
     payload = await request.json()
 
     logger.info(f"📬 Received GitHub webhook: {event_type}")
-    logger.debug(f"Payload: {payload}")
 
-    # For now, just acknowledge receipt
-    # We'll add actual processing logic later
+    # Handle pull request events
+    if event_type == "pull_request":
+        try:
+            result = await webhook_handler.handle_pull_request(payload)
+            return JSONResponse(content=result, status_code=200)
+        except Exception as e:
+            logger.error(f"Error processing webhook: {e}", exc_info=True)
+            return JSONResponse(
+                content={"error": str(e)},
+                status_code=500,
+            )
+
+    # For other event types, just acknowledge
     return JSONResponse(
         content={
             "status": "received",
             "event_type": event_type,
-            "message": "Webhook received successfully",
+            "message": f"Event type '{event_type}' not yet implemented",
         },
         status_code=200,
     )
