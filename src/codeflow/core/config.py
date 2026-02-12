@@ -33,10 +33,14 @@ class Settings(BaseSettings):
     groq_api_key: Optional[str] = Field(default=None, description="Groq API key")
     openai_api_key: Optional[str] = Field(default=None, description="OpenAI API key")
 
-    # Databases (will add later)
+    # Databases
     qdrant_url: Optional[str] = Field(default=None, description="Qdrant instance URL")
+    qdrant_api_key: Optional[str] = Field(default=None, description="Qdrant API key")
     neo4j_uri: Optional[str] = Field(default=None, description="Neo4j URI")
+    neo4j_user: Optional[str] = Field(default="neo4j", description="Neo4j username")
+    neo4j_password: Optional[str] = Field(default=None, description="Neo4j password")
     supabase_url: Optional[str] = Field(default=None, description="Supabase URL")
+    supabase_key: Optional[str] = Field(default=None, description="Supabase API key")
 
 
 @lru_cache
