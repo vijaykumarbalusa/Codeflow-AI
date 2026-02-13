@@ -3,18 +3,18 @@
 import logging
 from typing import Any
 
-from ..agents.code_analyzer import CodeAnalyzerAgent
+from ..agents.rag_code_analyzer import RAGCodeAnalyzer
 
 logger = logging.getLogger(__name__)
 
 
 class WebhookHandler:
-    """Processes GitHub webhook events."""
+    """Processes GitHub webhook events with RAG-enhanced analysis."""
 
     def __init__(self) -> None:
-        """Initialize the webhook handler."""
-        self.code_analyzer = CodeAnalyzerAgent()
-        logger.info("WebhookHandler initialized")
+        """Initialize with RAG analyzer."""
+        self.code_analyzer = RAGCodeAnalyzer()
+        logger.info("WebhookHandler initialized with RAG analyzer")
 
     async def handle_pull_request(self, payload: dict[str, Any]) -> dict[str, Any]:
         """Handle pull request webhook events.
@@ -44,8 +44,7 @@ class WebhookHandler:
 
         logger.info(f"PR #{pr_number}: '{title}' by @{author}")
 
-        # For now, analyze a sample code snippet
-        # In Week 3, we'll fetch actual PR diff from GitHub
+        # Sample code (in Week 4 we'll fetch real PR diff from GitHub)
         sample_code = """
 def process_payment(user_id, amount):
     query = f"UPDATE accounts SET balance = balance - {amount} WHERE id = {user_id}"
@@ -53,7 +52,7 @@ def process_payment(user_id, amount):
     return {"status": "success"}
 """
 
-        # Run analysis
+        # Run RAG-enhanced analysis
         analysis_result = await self.code_analyzer.process(
             {
                 "code": sample_code,
@@ -68,4 +67,10 @@ def process_payment(user_id, amount):
             "pr_title": title,
             "author": author,
             "analysis": analysis_result,
+            "rag_learning": {
+                "patterns_found": analysis_result.get("rag_context", {}).get(
+                    "similar_patterns_found", 0
+                ),
+                "learning_from_history": True,
+            },
         }
