@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: codeflow-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.codeflow.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: GROQ_API_KEY
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: GITHUB_APP_ID
+        sync: false
+      - key: GITHUB_INSTALLATION_ID
+        sync: false
+      - key: GITHUB_PRIVATE_KEY_PATH
+        value: config/private-key.pem
+      - key: ENVIRONMENT
+        value: production
