@@ -72,47 +72,28 @@ async def health_check() -> dict[str, str]:
 
 
 @app.post("/webhook/github")
-async def github_webhook(request: Request) -> JSONResponse:
-    """
-    Receive GitHub webhook events.
+async def github_webhook(request: Request):
+    """Handle GitHub webhook events"""
+    from src.codeflow.core.webhook_handler import get_webhook_handler
 
-    This is where GitHub will send PR events (opened, synchronized, etc.)
-    """
-    if not webhook_handler:
-        return JSONResponse(
-            content={"error": "Webhook handler not initialized"},
-            status_code=500,
-        )
+    # Get event type
+    event_type = request.headers.get("X-GitHub-Event")
 
-    # Get the event type from headers
-    event_type = request.headers.get("X-GitHub-Event", "unknown")
-
-    # Get the request body
+    # Get payload
     payload = await request.json()
 
-    logger.info(f"📬 Received GitHub webhook: {event_type}")
+    # Get webhook handler
+    handler = get_webhook_handler()
 
-    # Handle pull request events
+    # Route to appropriate handler
     if event_type == "pull_request":
-        try:
-            result = await webhook_handler.handle_pull_request(payload)
-            return JSONResponse(content=result, status_code=200)
-        except Exception as e:
-            logger.error(f"Error processing webhook: {e}", exc_info=True)
-            return JSONResponse(
-                content={"error": str(e)},
-                status_code=500,
-            )
-
-    # For other event types, just acknowledge
-    return JSONResponse(
-        content={
-            "status": "received",
-            "event_type": event_type,
-            "message": f"Event type '{event_type}' not yet implemented",
-        },
-        status_code=200,
-    )
+        result = await handler.handle_pull_request(payload)
+        return result
+    elif event_type == "pull_request_review":
+        result = await handler.handle_pull_request_review(payload)
+        return result
+    else:
+        return {"status": "ignored", "event": event_type}
 
 
 @app.exception_handler(Exception)

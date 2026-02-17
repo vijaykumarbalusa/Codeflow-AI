@@ -23,6 +23,7 @@ neo4j = "^5.16.0"
 sentence-transformers = "^2.3.0"
 cryptography = "^41.0.7"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+pyjwt = "^2.11.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
