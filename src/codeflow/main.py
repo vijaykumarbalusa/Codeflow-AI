@@ -4,7 +4,7 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from fastapi import FastAPI, Request
+from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from .core.config import get_settings
@@ -67,28 +67,22 @@ async def health_check() -> dict[str, str]:
 
 
 @app.post("/webhook/github")
-async def github_webhook(request: Request):
-    """Handle GitHub webhook events"""
+async def github_webhook(request: Request, background_tasks: BackgroundTasks):
+    """Handle GitHub webhook events - respond immediately, process in background"""
     from src.codeflow.core.webhook_handler import get_webhook_handler
 
-    # Get event type
     event_type = request.headers.get("X-GitHub-Event")
-
-    # Get payload
     payload = await request.json()
-
-    # Get webhook handler
     handler = get_webhook_handler()
 
-    # Route to appropriate handler
     if event_type == "pull_request":
-        result = await handler.handle_pull_request(payload)
-        return result
+        background_tasks.add_task(handler.handle_pull_request, payload)
     elif event_type == "pull_request_review":
-        result = await handler.handle_pull_request_review(payload)
-        return result
+        background_tasks.add_task(handler.handle_pull_request_review, payload)
     else:
         return {"status": "ignored", "event": event_type}
+
+    return {"status": "accepted", "event": event_type}
 
 
 @app.exception_handler(Exception)
