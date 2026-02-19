@@ -2,8 +2,8 @@ services:
   - type: web
     name: codeflow-ai
     runtime: python
-    buildCommand: pip install -r requirements.txt && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
-    startCommand: uvicorn src.codeflow.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
     envVars:
       - key: GROQ_API_KEY
         sync: false
