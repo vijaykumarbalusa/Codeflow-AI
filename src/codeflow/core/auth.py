@@ -24,12 +24,17 @@ class GitHubAuth:
         self._token_expires_at: float = 0
 
     def _load_private_key(self) -> str:
-        """Load private key from file"""
+        """Load private key from env var (cloud) or file (local)"""
+        # Prefer env var (for cloud deployments like Render)
+        if settings.github_private_key:
+            key = settings.github_private_key.replace("\\n", "\n")
+            return key
+        # Fall back to file path (for local development)
         key_path = Path(self.private_key_path)
         if not key_path.exists():
             raise FileNotFoundError(
                 f"Private key not found at {self.private_key_path}. "
-                f"Please download it from GitHub and place it there."
+                f"Set GITHUB_PRIVATE_KEY env var or place the key file there."
             )
         return key_path.read_text()
 

@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     github_private_key_path: str = Field(
         default="config/private-key.pem", description="Path to GitHub App private key"
     )
+    github_private_key: Optional[str] = Field(
+        default=None, description="GitHub App private key content (use instead of path in cloud)"
+    )
     github_webhook_secret: Optional[str] = Field(
         default=None, description="GitHub webhook secret for verification"
     )
