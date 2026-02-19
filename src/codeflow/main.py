@@ -20,18 +20,13 @@ webhook_handler: WebhookHandler | None = None
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan manager - runs on startup and shutdown."""
-    global webhook_handler
-
     settings = get_settings()
 
     # Startup
     setup_logging()
     logger.info(f"🚀 Starting CodeFlow AI (Environment: {settings.environment})")
     logger.info(f"Debug mode: {settings.debug}")
-
-    # Initialize webhook handler
-    webhook_handler = WebhookHandler()
-    logger.info("✅ Webhook handler ready")
+    logger.info("✅ Ready (webhook handler initializes on first request)")
 
     yield
 
