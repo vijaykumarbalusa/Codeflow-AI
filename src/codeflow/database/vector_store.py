@@ -6,7 +6,6 @@ from typing import Any
 
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
-from sentence_transformers import SentenceTransformer
 
 from ..core.config import get_settings
 
@@ -27,10 +26,21 @@ class VectorStore:
         )
 
         # Initialize embedding model (converts text to vectors)
-        self.encoder = SentenceTransformer("all-MiniLM-L6-v2")
+        self._encoder = None  # Lazy load on first use
         self.embedding_size = 384
 
-        logger.info("VectorStore initialized with all-MiniLM-L6-v2 model")
+        logger.info("VectorStore initialized (model loads on first use)")
+
+    @property
+    def encoder(self):
+        """Lazy load the sentence transformer model on first use."""
+        if self._encoder is None:
+            logger.info("Loading SentenceTransformer model...")
+            from sentence_transformers import SentenceTransformer
+
+            self._encoder = SentenceTransformer("all-MiniLM-L6-v2")
+            logger.info("SentenceTransformer model loaded OK")
+        return self._encoder
 
         # Create collections if they don't exist
         self._ensure_collections()
