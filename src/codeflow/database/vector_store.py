@@ -36,10 +36,10 @@ class VectorStore:
         """Lazy load the sentence transformer model on first use."""
         if self._encoder is None:
             logger.info("Loading SentenceTransformer model...")
-            from sentence_transformers import SentenceTransformer
+            from fastembed import TextEmbedding
 
-            self._encoder = SentenceTransformer("all-MiniLM-L6-v2")
-            logger.info("SentenceTransformer model loaded OK")
+            self._encoder = TextEmbedding("BAAI/bge-small-en-v1.5")
+            logger.info("FastEmbed model loaded OK")
         return self._encoder
 
         # Create collections if they don't exist
@@ -70,8 +70,8 @@ class VectorStore:
 
     def encode_text(self, text: str) -> list[float]:
         """Convert text to embedding vector."""
-        embedding = self.encoder.encode(text)
-        return embedding.tolist()
+        embeddings = list(self.encoder.embed([text]))
+        return embeddings[0].tolist()
 
     def store_code_snippet(
         self,
