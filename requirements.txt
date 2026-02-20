@@ -10,3 +10,4 @@ qdrant-client>=1.7.0
 sentence-transformers==2.3.0
 PyJWT==2.8.0
 cryptography==41.0.7
+# fastembed added Thu Feb 19 22:25:45 PST 2026
