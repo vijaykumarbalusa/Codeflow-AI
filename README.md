@@ -26,7 +26,7 @@ pinned: false
 
 [Features](#-features) · [Architecture](#-architecture) · [Setup](#-setup) · [How It Works](#-how-it-works) · [Self-Hosting](#-self-hosting)
 
----
+<!--
 
 </div>
 
@@ -57,7 +57,7 @@ Issues Found:
 Analysis Time: 1.35s | Model: Llama 3.3 70B | Files: 1
 ```
 
----
+<!--
 
 ## ✨ Features
 
@@ -69,7 +69,7 @@ Analysis Time: 1.35s | Model: Llama 3.3 70B | Files: 1
 - **📊 Confidence Scores** — Each issue comes with a confidence percentage
 - **✅ Safe-to-Merge** — Clear merge recommendation based on risk level
 
----
+<!--
 
 ## 🏗 Architecture
 
@@ -115,7 +115,7 @@ GitHub sends webhook
 | **Hosting** | Hugging Face Spaces (Docker) |
 | **Language** | Python 3.12 |
 
----
+<!--
 
 ## 📁 Project Structure
 
@@ -143,7 +143,7 @@ codeflow-ai/
 └── .env.example
 ```
 
----
+<!--
 
 ## ⚙️ Setup
 
@@ -202,7 +202,7 @@ uvicorn src.codeflow.main:app --reload --port 8000
 
 Visit `http://localhost:8000/docs` for the API docs.
 
----
+<!--
 
 ## 🔧 GitHub App Setup
 
@@ -214,7 +214,7 @@ Visit `http://localhost:8000/docs` for the API docs.
 3. Generate a private key and add to `.env` as `GITHUB_PRIVATE_KEY`
 4. Install the app on your repository
 
----
+<!--
 
 ## 🐳 Self-Hosting (Docker)
 
@@ -235,7 +235,7 @@ git remote add space https://huggingface.co/spaces/YOUR_USERNAME/codeflow-ai
 git push space main
 ```
 
----
+<!--
 
 ## 🔍 How It Works
 
@@ -268,7 +268,7 @@ The LLM is prompted to detect and report:
 | **Auth** | Broken auth, insecure sessions |
 | **Data Exposure** | Sensitive data in logs, error messages |
 
----
+<!--
 
 ## 📡 API Endpoints
 
@@ -279,7 +279,7 @@ The LLM is prompted to detect and report:
 | `POST` | `/webhook/github` | GitHub webhook receiver |
 | `GET` | `/docs` | Swagger API docs |
 
----
+<!--
 
 ## 🛡️ Security
 
@@ -288,7 +288,7 @@ The LLM is prompted to detect and report:
 - All secrets via environment variables — never hardcoded
 - Private key stored securely, never committed to git
 
----
+<!--
 
 ## 🤝 Contributing
 
@@ -300,13 +300,13 @@ Contributions are welcome! Please:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request — CodeFlow AI will review it automatically! 🤖
 
----
+<!--
 
 ## 📄 License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
----
+<!--
 
 <div align="center">
 
