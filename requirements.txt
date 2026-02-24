@@ -7,7 +7,7 @@ httpx==0.26.0
 PyGithub==2.1.1
 groq==0.4.1
 qdrant-client>=1.7.0
-sentence-transformers==2.3.0
+fastembed==0.3.6
 PyJWT==2.8.0
 cryptography==41.0.7
 # fastembed added Thu Feb 19 22:25:45 PST 2026
