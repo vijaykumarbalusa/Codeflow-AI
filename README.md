@@ -1,3 +1,12 @@
+---
+title: CodeFlow AI
+emoji: 🤖
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 <div align="center">
 
 <img src="https://img.shields.io/badge/CodeFlow_AI-🤖_PR_Security_Analyzer-6366f1?style=for-the-badge" alt="CodeFlow AI"/>
